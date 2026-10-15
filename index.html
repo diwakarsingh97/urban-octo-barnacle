@@ -1,0 +1,1898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090810">
+<meta name="description" content="VYRO — your personal space for routines, fitness, wellness, journaling and growth.">
+<title>VYRO — Personal Operating System</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+:root{
+  --bg:#090810;
+  --panel:#11101b;
+  --panel2:#171523;
+  --panel3:#201b30;
+  --text:#f6f3ff;
+  --muted:#a6a0bb;
+  --muted2:#79728f;
+  --line:rgba(220,210,255,.105);
+  --accent:#a78bfa;
+  --accent2:#7c4dff;
+  --accent-soft:rgba(167,139,250,.13);
+  --green:#9de5c0;
+  --cyan:#91dbed;
+  --orange:#ffbf91;
+  --pink:#efb1ec;
+  --danger:#ff929f;
+  --radius:24px;
+  --shadow:0 20px 70px rgba(0,0,0,.23);
+}
+:root[data-theme="cyan"]{
+  --accent:#78e1f7;
+  --accent2:#4488ff;
+  --accent-soft:rgba(120,225,247,.12);
+}
+:root[data-theme="rose"]{
+  --accent:#f3a3dc;
+  --accent2:#b45dff;
+  --accent-soft:rgba(243,163,220,.12);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:
+    radial-gradient(ellipse at 20% 0%,rgba(103,59,187,.10),transparent 38%),
+    var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  font-size:14px;
+  line-height:1.55;
+  min-height:100vh;
+}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{
+  outline:2px solid var(--accent);
+  outline-offset:3px;
+}
+button:disabled{opacity:.4;cursor:not-allowed}
+a{color:var(--accent)}
+.hidden{display:none!important}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+.eyebrow{
+  color:var(--accent);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:2.1px;
+  text-transform:uppercase;
+}
+h1,h2,h3,h4,p{margin-top:0}
+h1,h2,h3,h4{
+  font-family:'Manrope',sans-serif;
+  letter-spacing:-.5px;
+}
+h1{font-size:clamp(25px,3vw,34px);line-height:1.2;margin-bottom:9px}
+h2{font-size:21px;line-height:1.3;margin-bottom:8px}
+h3{font-size:15px;margin-bottom:5px}
+p{color:var(--muted)}
+button,.btn{transition:transform .18s ease,border-color .18s ease,background .18s ease}
+button:active{transform:scale(.975)}
+::selection{background:var(--accent2);color:white}
+
+/* Brand */
+.brand{display:flex;align-items:center;gap:11px;min-width:0}
+.brand-mark{
+  width:39px;height:39px;border-radius:14px;
+  display:grid;place-items:center;
+  background:linear-gradient(145deg,#c4adff,#7b46ec 64%,#4c2a99);
+  box-shadow:0 7px 26px rgba(124,77,255,.30);
+  color:white;font-family:'Manrope',sans-serif;font-size:22px;font-weight:800;
+  transform:rotate(-5deg);
+}
+.brand-name{
+  font-family:'Manrope',sans-serif;font-size:20px;
+  font-weight:800;letter-spacing:3.2px;line-height:1.2;
+}
+.brand-sub{font-size:9px;color:var(--muted2);letter-spacing:1.5px;margin-top:4px}
+
+/* Inputs and buttons */
+.field{display:grid;gap:7px;margin-bottom:15px}
+.field label,.field-label{font-size:12px;font-weight:700;color:#d7d1e7}
+.field input,.field textarea,.field select,
+.input,.select{
+  width:100%;background:#0e0c16;border:1px solid var(--line);
+  border-radius:13px;color:var(--text);padding:12px 14px;
+  outline:none;min-width:0;
+}
+.field textarea{resize:vertical;min-height:112px}
+.field input:focus,.field textarea:focus,.field select:focus{
+  border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)
+}
+select option{background:#171523;color:white}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:11px 15px;border:1px solid var(--line);border-radius:12px;
+  background:var(--panel2);color:var(--text);font-weight:700;
+  text-decoration:none;white-space:nowrap;
+}
+.btn:hover{border-color:rgba(167,139,250,.4);background:var(--panel3)}
+.btn-primary{
+  color:white;border-color:transparent;
+  background:linear-gradient(115deg,#9470f4,#7040db);
+  box-shadow:0 8px 24px rgba(124,77,255,.19)
+}
+.btn-primary:hover{background:linear-gradient(115deg,#a58afd,#8252ec)}
+.btn-quiet{background:transparent}
+.btn-danger{color:var(--danger)}
+.btn-small{padding:7px 10px;font-size:11px;border-radius:10px}
+.btn-wide{width:100%}
+.icon-btn{
+  width:38px;height:38px;display:grid;place-items:center;border-radius:12px;
+  border:1px solid var(--line);background:var(--panel2);color:var(--text);
+  flex-shrink:0;
+}
+.pill{
+  display:inline-flex;align-items:center;gap:6px;
+  border:1px solid var(--line);border-radius:999px;padding:5px 9px;
+  color:var(--muted);font-size:10px;font-weight:700;
+}
+.pill.accent{color:var(--accent);background:var(--accent-soft);border-color:transparent}
+.pill.green{color:var(--green);background:rgba(157,229,192,.09);border-color:transparent}
+.pill.orange{color:var(--orange);background:rgba(255,191,145,.09);border-color:transparent}
+
+/* Initial onboarding */
+.gate{
+  min-height:100vh;display:grid;grid-template-columns:1.05fr .95fr;
+  padding:22px;gap:22px;max-width:1600px;margin:auto;
+}
+.gate-hero{
+  min-height:620px;border:1px solid var(--line);border-radius:30px;
+  padding:clamp(28px,5vw,68px);position:relative;overflow:hidden;
+  background:
+    radial-gradient(ellipse at 65% 40%,rgba(144,83,255,.27),transparent 38%),
+    linear-gradient(145deg,#191426,#0d0b16 67%);
+  display:flex;flex-direction:column;justify-content:space-between;
+}
+.orbital{
+  width:min(330px,72%);aspect-ratio:1;position:absolute;
+  right:2%;top:17%;border:1px solid rgba(196,173,255,.2);
+  border-radius:50%;box-shadow:0 0 65px rgba(124,77,255,.12);
+}
+.orbital:before,.orbital:after{
+  content:"";position:absolute;border:1px solid rgba(196,173,255,.18);
+  border-radius:50%;inset:12%;transform:rotate(32deg) scaleX(.55)
+}
+.orbital:after{inset:25%;transform:rotate(-32deg) scaleX(.68)}
+.orb-core{
+  position:absolute;inset:36%;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#e2d5ff,#a17afb 35%,#6236cb 70%);
+  box-shadow:0 0 70px rgba(156,117,255,.5);
+}
+.gate-hero-copy{position:relative;z-index:1;max-width:450px;margin-top:95px}
+.gate-hero-copy h1{font-size:clamp(35px,5.2vw,60px);line-height:1.08;letter-spacing:-2px}
+.gate-hero-copy h1 span{color:var(--accent)}
+.gate-hero-copy p{max-width:360px;line-height:1.8}
+.gate-foot{position:relative;z-index:1;color:var(--muted2);font-size:11px}
+.gate-side{display:grid;place-items:center;padding:25px 10px}
+.gate-card{width:100%;max-width:430px;padding:clamp(20px,3vw,40px)}
+.gate-card h2{font-size:28px;letter-spacing:-1px;margin-top:18px}
+.gate-card .field{margin-top:16px}
+.step-dots{display:flex;gap:7px;margin:25px 0}
+.step-dots span{height:4px;flex:1;border-radius:5px;background:var(--panel3)}
+.step-dots span.active{background:var(--accent)}
+.upload-circle{
+  width:76px;height:76px;border:1px dashed rgba(193,175,255,.45);
+  border-radius:25px;display:grid;place-items:center;background:var(--accent-soft);
+  font-size:28px;overflow:hidden;color:var(--accent)
+}
+.upload-circle img{width:100%;height:100%;object-fit:cover}
+
+/* Main app layout */
+.app-shell{min-height:100vh}
+.sidebar{
+  position:fixed;z-index:20;left:0;top:0;bottom:0;width:238px;
+  padding:27px 17px 20px;border-right:1px solid var(--line);
+  background:rgba(12,10,19,.96);display:flex;flex-direction:column;
+  backdrop-filter:blur(22px);
+}
+.sidebar .brand{padding:0 9px 30px}
+.nav-label{padding:13px 11px 8px;color:var(--muted2);font-size:9px;letter-spacing:1.6px;font-weight:800}
+.nav-list{display:grid;gap:4px}
+.nav-item{
+  width:100%;display:flex;align-items:center;gap:12px;text-align:left;
+  padding:11px 12px;border:1px solid transparent;border-radius:12px;
+  background:transparent;color:var(--muted);font-size:12px;font-weight:600;
+}
+.nav-item:hover{background:rgba(255,255,255,.035);color:var(--text)}
+.nav-item.active{
+  color:var(--text);background:linear-gradient(100deg,rgba(150,111,255,.16),rgba(150,111,255,.04));
+  border-color:rgba(167,139,250,.15)
+}
+.nav-icon{font-size:17px;width:23px;text-align:center;color:var(--accent)}
+.sidebar-spacer{flex:1}
+.sidebar-profile{
+  display:flex;align-items:center;gap:10px;padding:14px 8px 0;
+  border-top:1px solid var(--line);margin-top:16px;min-width:0
+}
+.avatar{
+  height:37px;width:37px;border-radius:13px;display:grid;place-items:center;
+  background:linear-gradient(145deg,#bcabff,#6643bd);color:white;
+  font-weight:800;font-size:13px;overflow:hidden;flex-shrink:0
+}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.profile-lines{min-width:0;flex:1}
+.profile-lines strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px}
+.profile-lines span{font-size:10px;color:var(--muted2)}
+.main{margin-left:238px;min-width:0;padding:0 36px 50px}
+.topbar{
+  height:76px;display:flex;align-items:center;justify-content:space-between;
+  gap:16px;border-bottom:1px solid var(--line);margin-bottom:30px
+}
+.topbar-label{font-size:10px;color:var(--muted2);letter-spacing:1.7px;font-weight:700}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.top-date{color:var(--muted);font-size:11px}
+.page{max-width:1420px;margin:auto;animation:rise .34s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.page-head{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:18px;
+  margin-bottom:26px;flex-wrap:wrap
+}
+.page-head p{margin-bottom:0;font-size:13px}
+.page-head h1{margin-bottom:8px}
+.page-actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.grid{display:grid;gap:16px;min-width:0}
+.grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.span-2{grid-column:span 2}
+.stack{display:grid;gap:17px}
+.card{
+  min-width:0;background:linear-gradient(145deg,rgba(24,21,37,.95),rgba(16,14,25,.95));
+  border:1px solid var(--line);border-radius:var(--radius);padding:22px;
+  box-shadow:var(--shadow)
+}
+.card.subtle{background:rgba(17,15,26,.6);box-shadow:none}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:17px}
+.card-head h2,.card-head h3{margin:0}
+.card-head p{font-size:11px;margin:5px 0 0}
+.big-number{font-family:'Manrope',sans-serif;font-size:29px;letter-spacing:-1.5px;font-weight:800;line-height:1.2}
+.metric-label{font-size:11px;color:var(--muted);margin-bottom:9px}
+.metric-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:13px}
+.metric-glyph{
+  display:grid;place-items:center;width:39px;height:39px;border-radius:13px;
+  background:var(--accent-soft);font-size:18px;color:var(--accent)
+}
+.hero-card{
+  display:grid;grid-template-columns:1.2fr .8fr;gap:20px;overflow:hidden;
+  position:relative;min-height:250px;
+  background:
+    radial-gradient(ellipse at 85% 15%,rgba(145,91,255,.32),transparent 35%),
+    linear-gradient(115deg,#1e1731,#141020 67%);
+}
+.hero-card:after{
+  content:"";position:absolute;width:250px;height:250px;border-radius:50%;
+  border:1px solid rgba(196,173,255,.11);right:-90px;bottom:-155px;
+  box-shadow:0 0 0 24px rgba(196,173,255,.025),0 0 0 48px rgba(196,173,255,.02);
+  pointer-events:none
+}
+.hero-copy{position:relative;z-index:1;display:flex;flex-direction:column;justify-content:center;align-items:flex-start}
+.hero-copy h2{font-size:clamp(25px,3vw,34px);max-width:480px;letter-spacing:-1.3px}
+.hero-copy p{max-width:430px;line-height:1.8;font-size:12px}
+.hero-meta{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 18px}
+.hero-progress{display:grid;place-items:center;align-self:center;justify-self:center;position:relative}
+.ring{
+  height:155px;width:155px;border-radius:50%;
+  display:grid;place-items:center;
+  background:conic-gradient(var(--accent) calc(var(--progress,0)*1%),rgba(255,255,255,.07) 0)
+}
+.ring-inner{
+  height:128px;width:128px;border-radius:50%;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;background:#171326;border:1px solid rgba(255,255,255,.05)
+}
+.ring-inner strong{font:800 31px 'Manrope',sans-serif;letter-spacing:-1px}
+.ring-inner span{font-size:10px;color:var(--muted);margin-top:2px}
+.task-list{display:grid;gap:10px}
+.task{
+  display:flex;align-items:center;gap:12px;border:1px solid rgba(255,255,255,.055);
+  border-radius:14px;background:rgba(255,255,255,.018);padding:12px;
+  min-width:0
+}
+.check-btn{
+  flex-shrink:0;width:24px;height:24px;display:grid;place-items:center;
+  border:1px solid rgba(255,255,255,.18);border-radius:8px;background:transparent;
+  color:var(--text);font-size:13px;padding:0
+}
+.check-btn.checked{background:var(--accent2);border-color:var(--accent2)}
+.task-main{flex:1;min-width:0}
+.task-title{display:block;font-size:12px;font-weight:700;overflow-wrap:anywhere}
+.task-meta{display:block;font-size:10px;color:var(--muted2);margin-top:3px}
+.task.done .task-title{text-decoration:line-through;color:var(--muted2)}
+.task-category{font-size:10px;color:var(--muted);background:rgba(255,255,255,.04);padding:5px 8px;border-radius:8px}
+.empty{
+  padding:28px 18px;text-align:center;border:1px dashed var(--line);
+  border-radius:16px;color:var(--muted);font-size:12px
+}
+.empty .empty-icon{font-size:26px;margin-bottom:8px}
+.progress-line{height:7px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden}
+.progress-line span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:99px;transition:width .35s}
+.section-link{font-size:11px;color:var(--accent);text-decoration:none;font-weight:700}
+.section-link:hover{text-decoration:underline}
+.mini-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
+.mini-row:last-child{border-bottom:0}
+.mini-icon{width:37px;height:37px;display:grid;place-items:center;background:var(--accent-soft);border-radius:12px;font-size:17px;flex-shrink:0}
+.mini-copy{flex:1;min-width:0}
+.mini-copy strong{display:block;font-size:12px}
+.mini-copy span{font-size:10px;color:var(--muted)}
+.mini-value{font:700 12px 'Manrope',sans-serif}
+.quote-card{
+  background:linear-gradient(120deg,rgba(131,83,241,.13),rgba(236,164,233,.035));
+  border-color:rgba(167,139,250,.16)
+}
+.quote-mark{font:800 40px 'Manrope',sans-serif;color:var(--accent);line-height:1}
+.quote-text{font:600 19px/1.5 'Manrope',sans-serif;letter-spacing:-.3px}
+
+/* Weekly charts */
+.week-chart{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));align-items:end;gap:9px;height:150px;padding-top:10px}
+.week-col{height:100%;display:flex;align-items:center;justify-content:flex-end;flex-direction:column;gap:8px;min-width:0}
+.week-track{flex:1;width:100%;max-width:29px;border-radius:9px;background:rgba(255,255,255,.05);display:flex;align-items:flex-end;overflow:hidden}
+.week-bar{width:100%;min-height:3px;border-radius:9px;background:linear-gradient(180deg,var(--accent),var(--accent2));transition:height .35s}
+.week-day{font-size:10px;color:var(--muted2)}
+.week-val{font-size:9px;color:var(--muted);min-height:13px}
+
+/* Journal */
+.mood-select{display:flex;gap:9px;flex-wrap:wrap}
+.mood-option input{position:absolute;opacity:0;pointer-events:none}
+.mood-option span{
+  display:flex;align-items:center;gap:6px;padding:9px 11px;
+  border-radius:12px;border:1px solid var(--line);color:var(--muted);
+  cursor:pointer;font-size:11px
+}
+.mood-option input:checked+span{border-color:var(--accent);background:var(--accent-soft);color:var(--text)}
+.journal-entry{padding:17px 0;border-bottom:1px solid var(--line)}
+.journal-entry:last-child{border-bottom:0}
+.entry-top{display:flex;gap:12px;align-items:flex-start;justify-content:space-between}
+.entry-title{font-size:14px;font-weight:800;overflow-wrap:anywhere}
+.entry-date{font-size:10px;color:var(--muted2);margin-top:4px}
+.entry-body{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;line-height:1.8;color:#c2bbd5;margin:12px 0 0}
+.entry-mood{font-size:10px;color:var(--accent);white-space:nowrap}
+
+/* Chat / guide */
+.chat-window{
+  border:1px solid var(--line);border-radius:18px;background:rgba(8,7,14,.42);
+  padding:17px;display:flex;flex-direction:column;gap:13px;min-height:260px;
+  max-height:490px;overflow:auto
+}
+.chat-message{max-width:88%;padding:12px 14px;border-radius:14px;font-size:12px;line-height:1.75;white-space:pre-wrap;overflow-wrap:anywhere}
+.chat-message.bot{align-self:flex-start;border:1px solid var(--line);background:var(--panel2);border-bottom-left-radius:4px}
+.chat-message.user{align-self:flex-end;background:linear-gradient(135deg,#8057df,#6840c0);color:white;border-bottom-right-radius:4px}
+.chat-label{display:block;font-size:9px;letter-spacing:1px;color:var(--muted2);margin-bottom:4px;text-transform:uppercase}
+.prompt-row{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.chat-form{display:flex;gap:9px}
+.chat-form input{
+  min-width:0;flex:1;background:var(--panel);border:1px solid var(--line);
+  border-radius:13px;padding:13px;color:var(--text)
+}
+
+/* Membership */
+.plan-card{display:flex;flex-direction:column;min-height:360px;position:relative;overflow:hidden}
+.plan-card.featured{border-color:rgba(167,139,250,.55);background:radial-gradient(ellipse at 75% 0%,rgba(124,77,255,.19),transparent 40%),linear-gradient(145deg,#20182f,#11101b)}
+.plan-card h3{font-size:19px;margin:17px 0 4px}
+.plan-price{font:800 34px 'Manrope',sans-serif;letter-spacing:-1.5px;margin:8px 0}
+.plan-price small{font:500 11px 'DM Sans',sans-serif;color:var(--muted)}
+.plan-feature-list{display:grid;gap:13px;margin:19px 0 23px;padding:0;list-style:none;flex:1}
+.plan-feature-list li{display:flex;gap:9px;color:#cbc5da;font-size:11px}
+.plan-feature-list li:before{content:"✦";color:var(--accent)}
+.plan-footnote{font-size:10px;color:var(--muted2);line-height:1.7;margin-top:13px}
+
+/* Settings */
+.theme-option{
+  display:flex;align-items:center;gap:11px;padding:13px;border:1px solid var(--line);
+  border-radius:14px;background:rgba(255,255,255,.02);cursor:pointer;color:var(--text);
+  text-align:left
+}
+.theme-option.active{border-color:var(--accent);background:var(--accent-soft)}
+.theme-swatch{width:29px;height:29px;border-radius:10px;flex-shrink:0}
+.theme-swatch.violet{background:linear-gradient(135deg,#d1c0ff,#6f43e1)}
+.theme-swatch.cyan{background:linear-gradient(135deg,#aaf4ff,#398eff)}
+.theme-swatch.rose{background:linear-gradient(135deg,#ffb6e9,#9f54fc)}
+
+/* Mobile navigation */
+.mobile-nav{display:none}
+.more-overlay{display:none;position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.68);align-items:flex-end}
+.more-overlay.visible{display:flex}
+.more-sheet{
+  width:100%;padding:17px 18px 30px;background:#141120;border:1px solid var(--line);
+  border-radius:25px 25px 0 0;animation:rise .2s ease
+}
+.more-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.more-item{
+  padding:13px 5px;display:flex;align-items:center;justify-content:center;flex-direction:column;
+  gap:7px;border:1px solid var(--line);border-radius:13px;background:var(--panel);
+  color:var(--text);font-size:10px
+}
+.more-item span:first-child{font-size:20px;color:var(--accent)}
+.modal-overlay{
+  display:none;position:fixed;inset:0;z-index:100;background:rgba(4,3,9,.78);
+  align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(8px)
+}
+.modal-overlay.visible{display:flex}
+.modal{
+  width:min(560px,100%);max-height:85vh;overflow:auto;background:#151220;
+  border:1px solid var(--line);border-radius:22px;padding:24px;box-shadow:var(--shadow)
+}
+.modal-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.modal-content{font-size:12px;line-height:1.9;color:var(--muted)}
+.modal-content h3{color:var(--text);margin-top:18px}
+.toast{
+  position:fixed;z-index:200;left:50%;bottom:28px;transform:translate(-50%,20px);
+  opacity:0;pointer-events:none;background:#272039;border:1px solid rgba(167,139,250,.35);
+  color:var(--text);padding:12px 17px;border-radius:13px;box-shadow:var(--shadow);
+  font-size:12px;transition:all .2s ease;max-width:calc(100% - 28px);text-align:center
+}
+.toast.visible{opacity:1;transform:translate(-50%,0)}
+hr{border:0;border-top:1px solid var(--line);margin:20px 0}
+.data-note{border:1px solid rgba(157,229,192,.15);background:rgba(157,229,192,.045);padding:13px;border-radius:13px;color:#b4dbc7;font-size:11px;line-height:1.8}
+.danger-note{border:1px solid rgba(255,146,159,.18);background:rgba(255,146,159,.04);padding:13px;border-radius:13px;color:#f2abb3;font-size:11px;line-height:1.8}
+.inline-form{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.inline-form input{flex:1;min-width:0}
+.micro-label{font-size:9px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted2);font-weight:800}
+.separator-title{display:flex;align-items:center;gap:10px;color:var(--muted2);font-size:10px;margin:20px 0 12px}
+.separator-title:after{content:"";height:1px;background:var(--line);flex:1}
+footer.app-footer{padding:34px 0 0;color:var(--muted2);font-size:10px;text-align:center}
+
+/* Responsive */
+@media(max-width:1160px){
+  .main{padding:0 24px 40px}
+  .grid-4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .hero-card{grid-template-columns:1fr .65fr}
+}
+@media(max-width:850px){
+  .gate{grid-template-columns:1fr;padding:13px;gap:0}
+  .gate-hero{min-height:270px;padding:28px;border-radius:24px}
+  .orbital{width:200px;right:-7%;top:10%}
+  .gate-hero-copy{margin-top:48px;max-width:430px}
+  .gate-hero-copy h1{font-size:36px}
+  .gate-hero-copy p{max-width:270px;font-size:12px}
+  .gate-foot{display:none}
+  .gate-side{padding:8px 0 25px}
+  .sidebar{display:none}
+  .main{margin-left:0;padding:0 20px 110px}
+  .topbar{height:64px;margin-bottom:23px}
+  .mobile-nav{
+    display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;
+    position:fixed;bottom:0;left:0;right:0;z-index:40;padding:9px 8px max(11px,env(safe-area-inset-bottom));
+    border-top:1px solid var(--line);background:rgba(12,10,19,.96);backdrop-filter:blur(25px)
+  }
+  .mobile-nav .nav-item{flex-direction:column;justify-content:center;gap:3px;padding:7px 0;font-size:9px;border-radius:10px}
+  .mobile-nav .nav-icon{width:auto;font-size:17px}
+  .grid-3{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:560px){
+  body{font-size:13px}
+  .main{padding:0 14px 105px}
+  .topbar{margin-bottom:21px}
+  .top-date{display:none}
+  .topbar-label{font-size:9px}
+  h1{font-size:27px}
+  h2{font-size:19px}
+  .page-head{margin-bottom:19px;align-items:flex-start}
+  .page-head p{font-size:12px}
+  .page-actions{width:100%}
+  .page-actions .btn{flex:1}
+  .grid{gap:11px}
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
+  .span-2{grid-column:auto}
+  .card{padding:16px;border-radius:19px}
+  .hero-card{grid-template-columns:1fr;gap:6px;padding:22px}
+  .hero-progress{grid-row:1;justify-self:start}
+  .ring{width:115px;height:115px}
+  .ring-inner{width:94px;height:94px}
+  .ring-inner strong{font-size:24px}
+  .hero-copy h2{font-size:27px}
+  .hero-copy p{font-size:12px}
+  .metric-bottom{margin-top:10px}
+  .big-number{font-size:26px}
+  .plan-card{min-height:unset}
+  .chat-message{max-width:95%}
+  .week-chart{gap:5px;height:125px}
+  .week-track{max-width:24px}
+  .gate-card{padding:16px 10px}
+  .gate-card h2{font-size:26px}
+  .upload-circle{width:65px;height:65px}
+  .task{padding:10px}
+  .task-category{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<!-- First-run onboarding -->
+<section class="gate" id="gate">
+  <div class="gate-hero">
+    <div class="brand">
+      <div class="brand-mark">V</div>
+      <div>
+        <div class="brand-name">VYRO</div>
+        <div class="brand-sub">YOUR PERSONAL OS</div>
+      </div>
+    </div>
+    <div class="orbital"><div class="orb-core"></div></div>
+    <div class="gate-hero-copy">
+      <div class="eyebrow">A NEW KIND OF EVERYDAY</div>
+      <h1>Become the person<br>you <span>envision.</span></h1>
+      <p>Your routines. Your strength. Your thoughts. Your growth. One considered space for all of it.</p>
+    </div>
+    <div class="gate-foot">DESIGNED FOR YOUR NEXT CHAPTER · VYRO</div>
+  </div>
+  <div class="gate-side">
+    <div class="gate-card" id="gateStage"></div>
+  </div>
+</section>
+
+<!-- Main application -->
+<div class="app-shell hidden" id="appShell">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">V</div>
+      <div>
+        <div class="brand-name">VYRO</div>
+        <div class="brand-sub">YOUR PERSONAL OS</div>
+      </div>
+    </div>
+    <div class="nav-label">YOUR SPACE</div>
+    <nav class="nav-list" id="sidebarNav"></nav>
+    <div class="sidebar-spacer"></div>
+    <div class="sidebar-profile">
+      <div class="avatar" id="sideAvatar">V</div>
+      <div class="profile-lines">
+        <strong id="sideName">Your space</strong>
+        <span id="sidePlan">Free membership</span>
+      </div>
+      <button class="icon-btn" aria-label="Open settings" data-view="settings">⚙</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-label">VYRO <span style="color:var(--accent)">/</span> YOUR SPACE</div>
+      <div class="topbar-right">
+        <span class="top-date" id="headerDate"></span>
+        <button class="icon-btn" aria-label="Open your profile settings" data-view="settings" id="topAvatar">◉</button>
+      </div>
+    </header>
+    <div id="viewRoot"></div>
+    <footer class="app-footer">VYRO · MADE FOR YOUR OWN PACE <br><span style="display:block;margin-top:6px">Your entries are stored locally in this browser.</span></footer>
+  </main>
+
+  <nav class="mobile-nav" id="mobileNav" aria-label="Main navigation"></nav>
+</div>
+
+<div class="more-overlay" id="moreOverlay">
+  <div class="more-sheet">
+    <div class="card-head">
+      <div><div class="eyebrow">EXPLORE VYRO</div><h3 style="margin-top:7px">Your other spaces</h3></div>
+      <button class="icon-btn" data-action="close-more" aria-label="Close menu">✕</button>
+    </div>
+    <div class="more-grid" id="moreGrid"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <div class="modal-top">
+      <h2 id="modalTitle">VYRO</h2>
+      <button class="icon-btn" data-action="close-modal" aria-label="Close window">✕</button>
+    </div>
+    <div class="modal-content" id="modalContent"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+<input id="backupInput" type="file" accept=".json,application/json" class="hidden">
+<input id="settingsPhotoInput" type="file" accept="image/*" class="hidden">
+
+<script>
+"use strict";
+
+/* =========================================================
+   VYRO — Single-file personal life management app
+   Storage: browser localStorage
+   Payments, external AI and device health sync: not connected
+   ========================================================= */
+
+const STORAGE_KEY = "vyro-personal-os-v1";
+
+const navItems = [
+  {id:"home",label:"Overview",icon:"◈",group:"YOUR SPACE"},
+  {id:"routine",label:"My routine",icon:"◷",group:"YOUR SPACE"},
+  {id:"fitness",label:"Fitness",icon:"↗",group:"YOUR SPACE"},
+  {id:"journal",label:"Journal",icon:"✎",group:"YOUR SPACE"},
+  {id:"wellness",label:"Wellness",icon:"✧",group:"YOUR SPACE"},
+  {id:"insights",label:"Insights",icon:"⌁",group:"YOUR SPACE"},
+  {id:"guide",label:"VYRO Guide",icon:"✦",group:"PERSONAL"},
+  {id:"membership",label:"Membership",icon:"◇",group:"PERSONAL"},
+  {id:"settings",label:"Settings",icon:"⚙",group:"PERSONAL"}
+];
+
+const dayNames = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const fullDays = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+
+function uid(){
+  return window.crypto && crypto.randomUUID
+    ? crypto.randomUUID()
+    : Date.now().toString(36) + Math.random().toString(36).slice(2,9);
+}
+
+function todayKey(date = new Date()){
+  const y = date.getFullYear();
+  const m = String(date.getMonth()+1).padStart(2,"0");
+  const d = String(date.getDate()).padStart(2,"0");
+  return `${y}-${m}-${d}`;
+}
+
+function dateOffset(offset){
+  const d = new Date();
+  d.setDate(d.getDate()+offset);
+  return d;
+}
+
+function escapeHTML(value){
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[char]));
+}
+
+function formatDate(dateString, options = {}){
+  if(!dateString) return "";
+  const d = new Date(dateString + "T12:00:00");
+  if(Number.isNaN(d.getTime())) return escapeHTML(dateString);
+  return d.toLocaleDateString("en-IN", options);
+}
+
+function prettyToday(){
+  return new Date().toLocaleDateString("en-IN",{
+    weekday:"long",day:"numeric",month:"long"
+  });
+}
+
+function defaultState(){
+  return {
+    profile:{completed:false,name:"",age:"",photo:""},
+    plan:"Free",
+    settings:{theme:"violet"},
+    routines:[],
+    seededDays:{},
+    workouts:[],
+    journals:[],
+    checkins:{},
+    guideMessages:[]
+  };
+}
+
+function normalizeState(raw){
+  const base = defaultState();
+  if(!raw || typeof raw!=="object") return base;
+
+  const validThemes = ["violet","cyan","rose"];
+  const settings = raw.settings && typeof raw.settings==="object" ? raw.settings : {};
+  const profile = raw.profile && typeof raw.profile==="object" ? raw.profile : {};
+
+  return {
+    ...base,
+    ...raw,
+    profile:{
+      ...base.profile,
+      ...profile,
+      completed:Boolean(profile.completed),
+      name:String(profile.name||""),
+      age:String(profile.age||""),
+      photo:typeof profile.photo==="string" ? profile.photo : ""
+    },
+    plan:["Free","Bronze","Gold","Platinum"].includes(raw.plan) ? raw.plan : "Free",
+    settings:{
+      theme:validThemes.includes(settings.theme) ? settings.theme : "violet"
+    },
+    routines:Array.isArray(raw.routines) ? raw.routines : [],
+    seededDays:raw.seededDays && typeof raw.seededDays==="object" ? raw.seededDays : {},
+    workouts:Array.isArray(raw.workouts) ? raw.workouts : [],
+    journals:Array.isArray(raw.journals) ? raw.journals : [],
+    checkins:raw.checkins && typeof raw.checkins==="object" ? raw.checkins : {},
+    guideMessages:Array.isArray(raw.guideMessages) ? raw.guideMessages.slice(-60) : []
+  };
+}
+
+function loadState(){
+  try{
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return saved ? normalizeState(JSON.parse(saved)) : defaultState();
+  }catch(error){
+    console.warn("VYRO could not read saved browser data.",error);
+    return defaultState();
+  }
+}
+
+let state = loadState();
+let activeView = "home";
+let gateStep = 0;
+let onboardDraft = {name:"",age:"",photo:""};
+let toastTimer = null;
+
+function persist(showError = true){
+  try{
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
+    return true;
+  }catch(error){
+    console.error("VYRO storage error:",error);
+    if(showError) showToast("Browser storage is full. Export your data or remove a large profile image.");
+    return false;
+  }
+}
+
+function ensureTodayRoutines(){
+  const day = todayKey();
+  if(state.seededDays[day]) return;
+
+  const defaults = [
+    {title:"Start with intention",time:"Morning",category:"Mindset"},
+    {title:"Move your body",time:"Anytime",category:"Fitness"},
+    {title:"Take a mindful break",time:"Afternoon",category:"Wellness"},
+    {title:"Reflect on the day",time:"Evening",category:"Growth"}
+  ];
+
+  defaults.forEach(item=>{
+    state.routines.push({...item,id:uid(),day,done:false,createdAt:new Date().toISOString()});
+  });
+  state.seededDays[day] = true;
+  persist(false);
+}
+
+function setTheme(){
+  document.documentElement.dataset.theme = state.settings.theme || "violet";
+}
+
+function showToast(message){
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.classList.add("visible");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>toast.classList.remove("visible"),2600);
+}
+
+function getInitials(name){
+  const words = String(name||"VYRO").trim().split(/\s+/).filter(Boolean);
+  return words.slice(0,2).map(x=>x[0]).join("").toUpperCase() || "V";
+}
+
+function avatarMarkup(extraClass="avatar"){
+  if(state.profile.photo){
+    return `<div class="${extraClass}"><img alt="Profile photo" src="${escapeHTML(state.profile.photo)}"></div>`;
+  }
+  return `<div class="${extraClass}">${escapeHTML(getInitials(state.profile.name))}</div>`;
+}
+
+function currentRoutines(){
+  return state.routines.filter(r=>r.day===todayKey());
+}
+
+function routinePercent(){
+  const tasks=currentRoutines();
+  return tasks.length ? Math.round(tasks.filter(t=>t.done).length/tasks.length*100) : 0;
+}
+
+function todaysWorkouts(){
+  return state.workouts.filter(w=>w.date===todayKey());
+}
+
+function todaysMinutes(){
+  return todaysWorkouts().reduce((sum,w)=>sum+(Number(w.minutes)||0),0);
+}
+
+function currentCheckin(){
+  return state.checkins[todayKey()] || null;
+}
+
+function weeklyDays(){
+  const today = new Date();
+  const list=[];
+  for(let i=6;i>=0;i--){
+    const d = new Date(today);
+    d.setDate(today.getDate()-i);
+    list.push({key:todayKey(d),date:d,label:dayNames[d.getDay()]});
+  }
+  return list;
+}
+
+function weeklyWorkoutMinutes(){
+  return weeklyDays().map(day=>({
+    ...day,
+    value:state.workouts
+      .filter(w=>w.date===day.key)
+      .reduce((sum,w)=>sum+(Number(w.minutes)||0),0)
+  }));
+}
+
+function weeklyRoutineScores(){
+  return weeklyDays().map(day=>{
+    const tasks=state.routines.filter(t=>t.day===day.key);
+    return {...day,value:tasks.length?Math.round(tasks.filter(t=>t.done).length/tasks.length*100):0};
+  });
+}
+
+function weeklySleep(){
+  return weeklyDays().map(day=>({
+    ...day,
+    value:Number(state.checkins[day.key]?.sleep)||0
+  }));
+}
+
+function average(values){
+  const usable=values.filter(v=>Number.isFinite(v)&&v>0);
+  return usable.length ? usable.reduce((a,b)=>a+b,0)/usable.length : 0;
+}
+
+function pageHeader(title,subtitle,actions=""){
+  return `<div class="page-head">
+    <div><div class="eyebrow">YOUR PERSONAL SPACE</div><h1>${title}</h1><p>${subtitle}</p></div>
+    ${actions ? `<div class="page-actions">${actions}</div>` : ""}
+  </div>`;
+}
+
+function emptyState(icon,title,description){
+  return `<div class="empty"><div class="empty-icon">${icon}</div><strong>${title}</strong><div style="margin-top:5px">${description}</div></div>`;
+}
+
+function statCard(label,value,icon,note){
+  return `<div class="card subtle">
+    <div class="card-head"><div class="metric-label">${label}</div><div class="metric-glyph">${icon}</div></div>
+    <div class="big-number">${value}</div>
+    <div class="metric-bottom"><span class="small muted">${note}</span></div>
+  </div>`;
+}
+
+function taskMarkup(task,allowDelete=true){
+  return `<div class="task ${task.done?"done":""}">
+    <button class="check-btn ${task.done?"checked":""}" data-action="toggle-routine" data-id="${escapeHTML(task.id)}" aria-label="${task.done?"Mark incomplete":"Mark complete"}">${task.done?"✓":""}</button>
+    <div class="task-main"><span class="task-title">${escapeHTML(task.title)}</span><span class="task-meta">${escapeHTML(task.time||"Anytime")} · ${escapeHTML(task.category||"Personal")}</span></div>
+    <span class="task-category">${task.done?"Completed":escapeHTML(task.category||"Personal")}</span>
+    ${allowDelete?`<button class="icon-btn" style="width:31px;height:31px" data-action="delete-routine" data-id="${escapeHTML(task.id)}" aria-label="Delete routine">×</button>`:""}
+  </div>`;
+}
+
+function workoutMarkup(w){
+  const icon = w.type==="Strength"?"↗":w.type==="Cardio"?"⌁":w.type==="Yoga"?"✧":w.type==="Walking"?"⌁":"◈";
+  return `<div class="mini-row">
+    <div class="mini-icon">${icon}</div>
+    <div class="mini-copy"><strong>${escapeHTML(w.title||w.type)}</strong><span>${escapeHTML(w.type)} · ${escapeHTML(formatDate(w.date,{day:"numeric",month:"short"}))} · ${escapeHTML(w.effort||"Moderate")}</span></div>
+    <div style="text-align:right"><div class="mini-value">${Number(w.minutes)||0} min</div><button class="btn btn-quiet btn-small btn-danger" data-action="delete-workout" data-id="${escapeHTML(w.id)}">Remove</button></div>
+  </div>`;
+}
+
+function journalMarkup(entry){
+  const mood = {Great:"☀ Great",Good:"☼ Good",Okay:"◐ Okay","Low":"☾ Low","Stressed":"〰 Stressed"};
+  return `<article class="journal-entry">
+    <div class="entry-top"><div style="min-width:0"><div class="entry-title">${escapeHTML(entry.title)}</div><div class="entry-date">${escapeHTML(formatDate(entry.date,{weekday:"short",day:"numeric",month:"short",year:"numeric"}))}</div></div><span class="entry-mood">${escapeHTML(mood[entry.mood]||entry.mood||"Reflection")}</span></div>
+    <p class="entry-body">${escapeHTML(entry.body)}</p>
+    <div style="display:flex;justify-content:flex-end;margin-top:10px"><button class="btn btn-quiet btn-small btn-danger" data-action="delete-journal" data-id="${escapeHTML(entry.id)}">Delete entry</button></div>
+  </article>`;
+}
+
+function chartMarkup(items,suffix="%"){
+  const max=Math.max(1,...items.map(x=>x.value));
+  return `<div class="week-chart">${items.map(item=>{
+    const h=item.value ? Math.max(5,item.value/max*100) : 3;
+    return `<div class="week-col"><div class="week-val">${item.value ? escapeHTML(item.value)+suffix : "—"}</div><div class="week-track"><div class="week-bar" style="height:${h}%"></div></div><div class="week-day">${item.label}</div></div>`;
+  }).join("")}</div>`;
+}
+
+/* --------------------------- Onboarding --------------------------- */
+
+function renderGate(){
+  const stage=document.getElementById("gateStage");
+  const dots=`<div class="step-dots"><span class="${gateStep>=0?"active":""}"></span><span class="${gateStep>=1?"active":""}"></span><span class="${gateStep>=2?"active":""}"></span></div>`;
+
+  if(gateStep===0){
+    stage.innerHTML=`
+      <div class="eyebrow">WELCOME TO YOUR SPACE</div>
+      <h2>Make room for<br>your better self.</h2>
+      <p style="line-height:1.9;margin-top:12px">Build a rhythm that fits your life. Track the habits that matter, care for your body, and make space for your thoughts.</p>
+      ${dots}
+      <button class="btn btn-primary btn-wide" data-action="gate-next">Personalise my VYRO <span>→</span></button>
+      <p class="small" style="margin-top:15px">No account required for this browser-based version.</p>`;
+  }else if(gateStep===1){
+    stage.innerHTML=`
+      <div class="eyebrow">01 — A LITTLE ABOUT YOU</div>
+      <h2>Let's make it yours.</h2>
+      <p>Start with the basics. You can update your details later.</p>
+      ${dots}
+      <form id="gateProfileForm">
+        <div style="display:flex;align-items:center;gap:13px;margin:17px 0">
+          <div class="upload-circle" id="onboardPreview">${onboardDraft.photo?`<img src="${escapeHTML(onboardDraft.photo)}" alt="Selected profile photo">`:"＋"}</div>
+          <div><strong style="display:block;font-size:12px">Profile photo</strong><span class="small muted">Optional · up to 2 MB</span><div style="margin-top:7px"><label class="btn btn-small" for="onboardPhoto">Choose image</label><input id="onboardPhoto" type="file" accept="image/*" class="hidden"></div></div>
+        </div>
+        <div class="field"><label for="profileName">What should we call you?</label><input id="profileName" name="name" maxlength="50" placeholder="Your name" required value="${escapeHTML(onboardDraft.name)}"></div>
+        <div class="field"><label for="profileAge">Age</label><input id="profileAge" name="age" type="number" min="13" max="110" placeholder="Your age" required value="${escapeHTML(onboardDraft.age)}"></div>
+        <button class="btn btn-primary btn-wide" type="submit">Continue <span>→</span></button>
+        <button class="btn btn-quiet btn-wide" style="margin-top:8px" type="button" data-action="gate-back">← Back</button>
+      </form>`;
+  }else{
+    stage.innerHTML=`
+      <div class="eyebrow">02 — YOUR VYRO SPACE</div>
+      <h2>A space for your whole self.</h2>
+      <p>VYRO brings daily routines, movement, journaling and wellness into one place. You decide what to track and how quickly to grow.</p>
+      ${dots}
+      <div class="card subtle" style="padding:15px;margin:17px 0">
+        <div class="mini-row" style="padding-top:0"><div class="mini-icon">◷</div><div class="mini-copy"><strong>Build your rhythm</strong><span>Daily routines and habits</span></div></div>
+        <div class="mini-row"><div class="mini-icon">↗</div><div class="mini-copy"><strong>Move with purpose</strong><span>Fitness and personal progress</span></div></div>
+        <div class="mini-row"><div class="mini-icon">✎</div><div class="mini-copy"><strong>Make space to reflect</strong><span>Journal and wellness check-ins</span></div></div>
+      </div>
+      <form id="gateConsentForm">
+        <label style="display:flex;align-items:flex-start;gap:9px;color:var(--muted);font-size:11px;line-height:1.8;margin:15px 0">
+          <input type="checkbox" required style="margin-top:4px;accent-color:var(--accent)">
+          I understand that my entries are saved in this browser and that this version does not connect to a health service or provide medical advice.
+        </label>
+        <button class="btn btn-primary btn-wide" type="submit">Enter VYRO <span>→</span></button>
+        <button class="btn btn-quiet btn-wide" style="margin-top:8px" type="button" data-action="open-privacy">Read privacy information</button>
+        <button class="btn btn-quiet btn-wide" type="button" data-action="gate-back">← Back</button>
+      </form>`;
+  }
+}
+
+function startGate(){
+  document.getElementById("appShell").classList.add("hidden");
+  document.getElementById("gate").classList.remove("hidden");
+  renderGate();
+}
+
+function finishOnboarding(){
+  state.profile={
+    ...state.profile,
+    ...onboardDraft,
+    completed:true
+  };
+  ensureTodayRoutines();
+  persist();
+  startApp();
+}
+
+/* --------------------------- App shell --------------------------- */
+
+function renderChrome(){
+  document.getElementById("sidebarNav").innerHTML = navItems.map((item,index)=>{
+    const groupChanged = index===0 || item.group!==navItems[index-1]?.group;
+    return `${groupChanged?`<div class="nav-label">${item.group}</div>`:""}
+      <button class="nav-item ${activeView===item.id?"active":""}" data-view="${item.id}">
+        <span class="nav-icon">${item.icon}</span><span>${item.label}</span>
+      </button>`;
+  }).join("");
+
+  const primary=["home","routine","fitness","journal"];
+  document.getElementById("mobileNav").innerHTML=primary.map(id=>{
+    const item=navItems.find(x=>x.id===id);
+    return `<button class="nav-item ${activeView===id?"active":""}" data-view="${id}"><span class="nav-icon">${item.icon}</span><span>${item.label==="Overview"?"Home":item.label}</span></button>`;
+  }).join("")+`<button class="nav-item" data-action="open-more"><span class="nav-icon">☰</span><span>More</span></button>`;
+
+  const secondary=navItems.filter(x=>!primary.includes(x.id));
+  document.getElementById("moreGrid").innerHTML=secondary.map(item=>`
+    <button class="more-item" data-view="${item.id}"><span>${item.icon}</span><span>${item.label}</span></button>
+  `).join("");
+
+  document.getElementById("sideName").textContent=state.profile.name||"Your space";
+  document.getElementById("sidePlan").textContent=(state.plan==="Free"?"Free":state.plan+" membership");
+  document.getElementById("sideAvatar").innerHTML=state.profile.photo
+    ? `<img alt="Profile photo" src="${escapeHTML(state.profile.photo)}">`
+    : escapeHTML(getInitials(state.profile.name));
+  document.getElementById("topAvatar").innerHTML=state.profile.photo
+    ? `<img alt="Profile photo" style="width:100%;height:100%;object-fit:cover;border-radius:11px" src="${escapeHTML(state.profile.photo)}">`
+    : "◉";
+  document.getElementById("headerDate").textContent=prettyToday();
+}
+
+function startApp(){
+  setTheme();
+  document.getElementById("gate").classList.add("hidden");
+  document.getElementById("appShell").classList.remove("hidden");
+  renderChrome();
+  setView(activeView);
+}
+
+function setView(view){
+  if(!navItems.some(item=>item.id===view)) view="home";
+  activeView=view;
+  document.getElementById("moreOverlay").classList.remove("visible");
+  renderChrome();
+  document.getElementById("viewRoot").innerHTML=renderView(view);
+  document.getElementById("viewRoot").querySelectorAll("[data-autofocus]").forEach(el=>el.focus());
+  document.getElementById("main")?.scrollTo?.(0,0);
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* --------------------------- Dashboard --------------------------- */
+
+function renderHome(){
+  const name=(state.profile.name||"there").trim().split(/\s+/)[0];
+  const tasks=currentRoutines();
+  const done=tasks.filter(t=>t.done).length;
+  const check=currentCheckin();
+  const workouts=todaysWorkouts();
+  const sleep=check ? Number(check.sleep)||0 : 0;
+  const water=check ? Number(check.water)||0 : 0;
+  const recentJournal=[...state.journals].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,2);
+  const todayTasks=tasks.slice(0,4);
+
+  return `<div class="page">
+    <div class="page-head">
+      <div><div class="eyebrow">${escapeHTML(fullDays[new Date().getDay()])} · ${escapeHTML(formatDate(todayKey(),{day:"numeric",month:"long"}))}</div>
+      <h1>Good ${new Date().getHours()<12?"morning":new Date().getHours()<17?"afternoon":"evening"}, ${escapeHTML(name)}.</h1>
+      <p>Small steps. Intentional days. Your pace is enough.</p></div>
+      <div class="page-actions"><span class="pill accent">✦ ${escapeHTML(state.plan==="Free"?"VYRO MEMBER":state.plan.toUpperCase()+" MEMBER")}</span></div>
+    </div>
+
+    <section class="card hero-card">
+      <div class="hero-copy">
+        <div class="eyebrow">YOUR DAY, YOUR WAY</div>
+        <h2>A little progress<br>goes a long way.</h2>
+        <p>You don't need a perfect day. Just a few moments that move you in the direction you want to go.</p>
+        <div class="hero-meta"><span class="pill">${done}/${tasks.length} routines completed</span><span class="pill">${todaysMinutes()} min movement</span></div>
+        <button class="btn btn-primary" data-view="routine">Continue your day <span>→</span></button>
+      </div>
+      <div class="hero-progress">
+        <div class="ring" style="--progress:${routinePercent()}">
+          <div class="ring-inner"><strong>${routinePercent()}%</strong><span>DAILY RHYTHM</span></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="grid grid-4" style="margin-top:16px">
+      ${statCard("ROUTINES COMPLETED",`${done}/${tasks.length}`,"◷",tasks.length?"Today's progress":"Start today")}
+      ${statCard("MOVEMENT",`${todaysMinutes()} <span style="font-size:13px;letter-spacing:0">min</span>`,"↗",`${workouts.length} workout${workouts.length===1?"":"s"} logged today`)}
+      ${statCard("SLEEP LOGGED",sleep?sleep.toFixed(1)+" h":"—","☾",sleep?"From your last check-in":"Add your sleep hours")}
+      ${statCard("WATER LOGGED",water?water.toFixed(1)+" L":"—","♧",water?"From your last check-in":"Record your water")}
+    </div>
+
+    <div class="grid grid-2" style="margin-top:16px">
+      <section class="card">
+        <div class="card-head"><div><h2>Today's rhythm</h2><p>A manageable list, not a perfect score.</p></div><button class="btn btn-quiet btn-small" data-view="routine">View all →</button></div>
+        <div class="task-list">${todayTasks.length?todayTasks.map(t=>taskMarkup(t,false)).join(""):emptyState("◷","A fresh start","Add a routine to get going.")}</div>
+        <div style="margin-top:17px"><div class="progress-line"><span style="width:${routinePercent()}%"></span></div><div class="metric-bottom"><span class="small muted">Your daily rhythm</span><strong class="small">${routinePercent()}%</strong></div></div>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><div><h2>How are you feeling?</h2><p>Take a moment to check in with yourself.</p></div><span class="metric-glyph">✧</span></div>
+        ${check?`<div class="data-note">Today's check-in is saved. Mood: <strong>${escapeHTML(check.mood||"Not set")}</strong>. Your progress is about awareness, not perfection.</div>`:`<div class="quote-card card subtle" style="padding:20px"><div class="quote-mark">“</div><div class="quote-text">You are allowed to grow at a pace that feels sustainable.</div></div>`}
+        <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:17px">
+          <button class="btn btn-primary" data-view="wellness">${check?"Update check-in":"Daily check-in"} →</button>
+          <button class="btn" data-view="journal">Write a little</button>
+        </div>
+      </section>
+    </div>
+
+    <div class="grid grid-2" style="margin-top:16px">
+      <section class="card">
+        <div class="card-head"><div><h2>This week's movement</h2><p>Minutes from the workouts you log.</p></div><button class="btn btn-quiet btn-small" data-view="fitness">Fitness →</button></div>
+        ${chartMarkup(weeklyWorkoutMinutes(),"m")}
+      </section>
+      <section class="card">
+        <div class="card-head"><div><h2>Your recent reflections</h2><p>Your journal, just as you left it.</p></div><button class="btn btn-quiet btn-small" data-view="journal">Open journal →</button></div>
+        ${recentJournal.length?recentJournal.map(e=>`<div class="mini-row"><div class="mini-icon">✎</div><div class="mini-copy"><strong>${escapeHTML(e.title)}</strong><span>${escapeHTML(formatDate(e.date,{day:"numeric",month:"short"}))} · ${escapeHTML(e.mood||"Reflection")}</span></div></div>`:emptyState("✎","Your story starts here","A line or two is enough.") }
+      </section>
+    </div>
+    <footer style="text-align:center;color:var(--muted2);font-size:10px;margin:27px 0 0">You don't have to do everything today. Just what matters next.</footer>
+  </div>`;
+}
+
+/* --------------------------- Routine --------------------------- */
+
+function renderRoutine(){
+  const tasks=currentRoutines();
+  const done=tasks.filter(t=>t.done).length;
+  const categories=["Mindset","Fitness","Wellness","Growth","Personal","Work","Study","Other"];
+  return `<div class="page">
+    ${pageHeader("Your daily rhythm","Build a routine that supports the life you're creating.",`<span class="pill accent">${done} of ${tasks.length} complete</span>`)}
+    <div class="grid grid-2">
+      <section class="card">
+        <div class="card-head"><div><h2>Today's intentions</h2><p>${escapeHTML(prettyToday())}</p></div><span class="metric-glyph">◷</span></div>
+        <div style="display:flex;align-items:center;gap:13px;margin-bottom:19px">
+          <div class="ring" style="width:74px;height:74px;--progress:${routinePercent()}"><div class="ring-inner" style="width:59px;height:59px"><strong style="font-size:17px">${routinePercent()}%</strong></div></div>
+          <div><strong style="font-size:13px;display:block">${done===tasks.length&&tasks.length?"Beautifully done.":"Keep going at your pace."}</strong><span class="small muted">${done} completed · ${tasks.length-done} remaining</span></div>
+        </div>
+        <div class="task-list">${tasks.length?tasks.map(t=>taskMarkup(t,true)).join(""):emptyState("◷","No routines yet","Add a routine below to start.")}</div>
+      </section>
+
+      <div class="stack">
+        <section class="card">
+          <div class="card-head"><div><h2>Create a routine</h2><p>Make it meaningful and realistic.</p></div><span class="metric-glyph">＋</span></div>
+          <form id="routineForm">
+            <div class="field"><label for="routineTitle">Routine name</label><input id="routineTitle" name="title" maxlength="80" placeholder="e.g. 20-minute walk" required></div>
+            <div class="grid grid-2">
+              <div class="field"><label for="routineTime">When</label><select id="routineTime" name="time"><option>Morning</option><option>Afternoon</option><option>Evening</option><option>Anytime</option></select></div>
+              <div class="field"><label for="routineCategory">Category</label><select id="routineCategory" name="category">${categories.map(c=>`<option>${c}</option>`).join("")}</select></div>
+            </div>
+            <button class="btn btn-primary btn-wide" type="submit">＋ Add to today's rhythm</button>
+          </form>
+        </section>
+        <section class="card subtle">
+          <div class="eyebrow">A SMALL REMINDER</div>
+          <h2 style="margin-top:12px">Consistency over intensity.</h2>
+          <p style="font-size:12px;line-height:1.9">Your routine is a tool, not a test. Adjust it when life changes. A skipped task is information, not a verdict.</p>
+        </section>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* --------------------------- Fitness --------------------------- */
+
+function renderFitness(){
+  const all=[...state.workouts].sort((a,b)=>(b.createdAt||"").localeCompare(a.createdAt||""));
+  const total=all.reduce((s,w)=>s+(Number(w.minutes)||0),0);
+  const types=["Strength","Cardio","Walking","Yoga","Stretching","Sports","Other"];
+
+  return `<div class="page">
+    ${pageHeader("Move in your own way","Log movement, build consistency, and recognise your effort.",`<span class="pill accent">↗ ${total} lifetime minutes</span>`)}
+    <div class="grid grid-3">
+      ${statCard("TODAY",todaysMinutes()+" min","↗","Movement logged")}
+      ${statCard("THIS WEEK",weeklyWorkoutMinutes().reduce((s,d)=>s+d.value,0)+" min","⌁","Last seven days")}
+      ${statCard("SESSIONS LOGGED",all.length,"✧","Your recorded workouts")}
+    </div>
+    <div class="grid grid-2" style="margin-top:16px">
+      <section class="card">
+        <div class="card-head"><div><h2>Log a session</h2><p>Record what you actually did.</p></div><span class="metric-glyph">＋</span></div>
+        <form id="workoutForm">
+          <div class="field"><label for="workoutTitle">Session name</label><input id="workoutTitle" name="title" maxlength="70" placeholder="e.g. Full body workout" required></div>
+          <div class="grid grid-2">
+            <div class="field"><label for="workoutType">Activity</label><select id="workoutType" name="type">${types.map(t=>`<option>${t}</option>`).join("")}</select></div>
+            <div class="field"><label for="workoutMinutes">Duration (minutes)</label><input id="workoutMinutes" name="minutes" type="number" min="1" max="1440" placeholder="30" required></div>
+          </div>
+          <div class="field"><label for="workoutEffort">Effort</label><select id="workoutEffort" name="effort"><option>Easy</option><option selected>Moderate</option><option>Challenging</option></select></div>
+          <div class="field"><label for="workoutNote">Notes (optional)</label><textarea id="workoutNote" name="note" maxlength="500" rows="3" placeholder="How did it feel? Any progress to remember?"></textarea></div>
+          <button class="btn btn-primary btn-wide" type="submit">Save workout</button>
+        </form>
+      </section>
+      <div class="stack">
+        <section class="card">
+          <div class="card-head"><div><h2>Weekly movement</h2><p>Based on your saved sessions.</p></div></div>
+          ${chartMarkup(weeklyWorkoutMinutes(),"m")}
+        </section>
+        <section class="card">
+          <div class="card-head"><div><h2>Find your rhythm</h2><p>Some movement ideas to try.</p></div></div>
+          <div class="mini-row"><div class="mini-icon">↗</div><div class="mini-copy"><strong>Strength</strong><span>Train at a level that feels appropriate.</span></div></div>
+          <div class="mini-row"><div class="mini-icon">⌁</div><div class="mini-copy"><strong>Walk or cycle</strong><span>Gentle movement counts, too.</span></div></div>
+          <div class="mini-row"><div class="mini-icon">✧</div><div class="mini-copy"><strong>Mobility & recovery</strong><span>Leave room for rest.</span></div></div>
+          <p class="small" style="margin:13px 0 0">VYRO records only the information you enter. No wearable or phone sensors are connected.</p>
+        </section>
+      </div>
+    </div>
+    <section class="card" style="margin-top:16px">
+      <div class="card-head"><div><h2>Your training history</h2><p>Review or remove individual session logs.</p></div></div>
+      ${all.length?all.slice(0,30).map(workoutMarkup).join(""):emptyState("↗","Your first session starts here","Record a workout above to build your history.")}
+      ${all.length>30?`<p class="small muted">Showing the 30 most recent sessions.</p>`:""}
+    </section>
+  </div>`;
+}
+
+/* --------------------------- Journal --------------------------- */
+
+function renderJournal(){
+  const entries=[...state.journals].sort((a,b)=>(b.createdAt||"").localeCompare(a.createdAt||""));
+  const moodOptions=["Great","Good","Okay","Low","Stressed"];
+  return `<div class="page">
+    ${pageHeader("Your journal","A private space to untangle thoughts, capture moments, and reflect.",`<span class="pill accent">✎ ${entries.length} entr${entries.length===1?"y":"ies"}</span>`)}
+    <div class="grid grid-2">
+      <section class="card">
+        <div class="card-head"><div><h2>Put it into words.</h2><p>It doesn't have to sound perfect. It just has to be yours.</p></div><span class="metric-glyph">✎</span></div>
+        <form id="journalForm">
+          <div class="field"><label for="journalTitle">Give this entry a title</label><input id="journalTitle" name="title" maxlength="100" placeholder="A thought worth keeping" required></div>
+          <div class="field"><span class="field-label">How are you feeling?</span><div class="mood-select">${moodOptions.map((m,i)=>`<label class="mood-option"><input type="radio" name="mood" value="${m}" ${m==="Okay"?"checked":""}><span>${["☀","☼","◐","☾","〰"][i]} ${m}</span></label>`).join("")}</div></div>
+          <div class="field"><label for="journalBody">Your thoughts</label><textarea id="journalBody" name="body" rows="8" maxlength="10000" placeholder="What is on your mind today? What felt good? What do you need?" required></textarea></div>
+          <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap"><span class="small muted">Saved only in this browser.</span><button class="btn btn-primary" type="submit">Save reflection ↗</button></div>
+        </form>
+      </section>
+      <section class="card">
+        <div class="card-head"><div><h2>Recent reflections</h2><p>Give yourself a moment to look back.</p></div></div>
+        ${entries.length?entries.slice(0,4).map(journalMarkup).join(""):emptyState("✎","A page waiting for you","Write your first reflection on the left.")}
+      </section>
+    </div>
+    <section class="card" style="margin-top:16px">
+      <div class="card-head"><div><h2>Journal archive</h2><p>All of your saved entries, newest first.</p></div><span class="pill">${entries.length} total</span></div>
+      ${entries.length?entries.map(journalMarkup).join(""):emptyState("⌁","Nothing written yet","Your journal will grow with you.")}
+    </section>
+  </div>`;
+}
+
+/* --------------------------- Wellness --------------------------- */
+
+function renderWellness(){
+  const c=currentCheckin()||{sleep:"",water:"",mood:"",energy:"",weight:""};
+  const moodOptions=["Great","Good","Okay","Low","Stressed"];
+  const recent=weeklyDays().filter(d=>state.checkins[d.key]).reverse();
+  const sleepAvg=average(weeklyDays().map(d=>Number(state.checkins[d.key]?.sleep)||0));
+  const waterAvg=average(weeklyDays().map(d=>Number(state.checkins[d.key]?.water)||0));
+
+  return `<div class="page">
+    ${pageHeader("Your wellbeing","Listen to how you feel. Track gently, without judgement.",`<span class="pill accent">✧ Daily check-in</span>`)}
+    <div class="grid grid-3">
+      ${statCard("AVERAGE SLEEP",sleepAvg?sleepAvg.toFixed(1)+" h":"—","☾","Based on logged days")}
+      ${statCard("AVERAGE WATER",waterAvg?waterAvg.toFixed(1)+" L":"—","♧","Based on logged days")}
+      ${statCard("CHECK-INS",Object.keys(state.checkins).length,"✧","Days with a saved check-in")}
+    </div>
+    <div class="grid grid-2" style="margin-top:16px">
+      <section class="card">
+        <div class="card-head"><div><h2>Daily check-in</h2><p>Your entry for ${escapeHTML(prettyToday())}.</p></div><span class="metric-glyph">✧</span></div>
+        <form id="wellnessForm">
+          <div class="field"><label for="wellSleep">Sleep (hours)</label><input id="wellSleep" name="sleep" type="number" min="0" max="24" step=".25" placeholder="e.g. 7.5" value="${escapeHTML(c.sleep)}"></div>
+          <div class="field"><label for="wellWater">Water (litres)</label><input id="wellWater" name="water" type="number" min="0" max="30" step=".1" placeholder="e.g. 2.0" value="${escapeHTML(c.water)}"></div>
+          <div class="field"><label for="wellMood">Mood</label><select id="wellMood" name="mood"><option value="">Choose how you feel</option>${moodOptions.map(m=>`<option ${c.mood===m?"selected":""}>${m}</option>`).join("")}</select></div>
+          <div class="field"><label for="wellEnergy">Energy level</label><select id="wellEnergy" name="energy"><option value="">Choose energy level</option>${["Very low","Low","Moderate","Good","High"].map(v=>`<option ${c.energy===v?"selected":""}>${v}</option>`).join("")}</select></div>
+          <div class="field"><label for="wellWeight">Weight in kg (optional)</label><input id="wellWeight" name="weight" type="number" min="1" max="500" step=".1" placeholder="Optional" value="${escapeHTML(c.weight)}"></div>
+          <button class="btn btn-primary btn-wide" type="submit">Save today's check-in</button>
+        </form>
+      </section>
+      <div class="stack">
+        <section class="card">
+          <div class="card-head"><div><h2>Sleep, at a glance</h2><p>Your recorded sleep hours for the last seven days.</p></div></div>
+          ${chartMarkup(weeklySleep(),"h")}
+        </section>
+        <section class="card">
+          <div class="eyebrow">GENTLE GUIDANCE</div>
+          <h2 style="margin-top:12px">Awareness, not judgement.</h2>
+          <p style="font-size:12px;line-height:1.9">Use these logs to notice patterns. A single mood, water total, or night of sleep cannot tell the whole story. Your personal needs may differ.</p>
+          <div class="data-note">VYRO is a personal tracking tool, not a medical device or a substitute for a qualified healthcare professional.</div>
+        </section>
+      </div>
+    </div>
+    <section class="card" style="margin-top:16px">
+      <div class="card-head"><div><h2>Recent check-ins</h2><p>Your recorded wellbeing history.</p></div></div>
+      ${recent.length?recent.map(d=>{
+        const entry=state.checkins[d.key];
+        return `<div class="mini-row"><div class="mini-icon">✧</div><div class="mini-copy"><strong>${escapeHTML(formatDate(d.key,{weekday:"short",day:"numeric",month:"short"}))}</strong><span>${escapeHTML(entry.mood||"Mood not logged")} · ${entry.sleep?escapeHTML(entry.sleep)+" h sleep":"No sleep entry"} · ${entry.water?escapeHTML(entry.water)+" L water":"No water entry"}</span></div><span class="mini-value">${escapeHTML(entry.energy||"—")}</span></div>`;
+      }).join(""):emptyState("☾","Your wellness history will appear here","Save a check-in to begin tracking patterns.")}
+    </section>
+  </div>`;
+}
+
+/* --------------------------- Insights --------------------------- */
+
+function renderInsights(){
+  const routines=weeklyRoutineScores();
+  const workouts=weeklyWorkoutMinutes();
+  const sleep=weeklySleep();
+  const overallRoutine=state.routines.length?Math.round(state.routines.filter(t=>t.done).length/state.routines.length*100):0;
+  const totalMinutes=state.workouts.reduce((sum,w)=>sum+(Number(w.minutes)||0),0);
+  const sleepAvg=average(sleep.map(d=>d.value));
+  const journalCount=state.journals.length;
+  const bestDay=[...routines].sort((a,b)=>b.value-a.value)[0];
+
+  return `<div class="page">
+    ${pageHeader("Your progress","Notice the patterns. Celebrate the effort. Decide what comes next.",`<button class="btn" data-action="export">↓ Export my data</button>`)}
+    <div class="grid grid-4">
+      ${statCard("ROUTINE COMPLETION",overallRoutine+"%","◷","Across all saved routines")}
+      ${statCard("TOTAL MOVEMENT",totalMinutes+" min","↗","All sessions logged")}
+      ${statCard("JOURNAL ENTRIES",journalCount,"✎","Thoughts captured")}
+      ${statCard("AVERAGE SLEEP",sleepAvg?sleepAvg.toFixed(1)+" h":"—","☾","Across the last seven days")}
+    </div>
+    <div class="grid grid-2" style="margin-top:16px">
+      <section class="card">
+        <div class="card-head"><div><h2>Routine consistency</h2><p>Percentage of that day's routines completed.</p></div></div>
+        ${chartMarkup(routines,"%")}
+        <p class="small muted" style="margin:14px 0 0">Days without saved routines appear as zero; that does not mean you failed.</p>
+      </section>
+      <section class="card">
+        <div class="card-head"><div><h2>Movement over time</h2><p>Minutes from your logged sessions.</p></div></div>
+        ${chartMarkup(workouts,"m")}
+        <p class="small muted" style="margin:14px 0 0">These totals are based only on entries you have recorded.</p>
+      </section>
+      <section class="card">
+        <div class="card-head"><div><h2>Sleep log</h2><p>Recorded hours, not device-measured sleep.</p></div></div>
+        ${chartMarkup(sleep,"h")}
+      </section>
+      <section class="card quote-card">
+        <div class="eyebrow">A REFLECTION FOR YOU</div>
+        <div class="quote-mark" style="margin-top:14px">“</div>
+        <div class="quote-text">${bestDay&&bestDay.value>0?`You recorded your strongest routine completion on ${escapeHTML(bestDay.label)}. Notice what helped you show up that day.`:"Progress becomes easier to understand when you record it. Start with one small, repeatable habit."}</div>
+        <p style="margin:14px 0 0;font-size:11px">Insights are calculated from your own saved entries; they are not predictions or medical assessments.</p>
+      </section>
+    </div>
+  </div>`;
+}
+
+/* --------------------------- Personal guide --------------------------- */
+
+function guideReply(question){
+  const q=question.toLowerCase();
+  const r=currentRoutines();
+  const done=r.filter(t=>t.done).length;
+  const workouts=todaysWorkouts();
+  const minutes=todaysMinutes();
+  const check=currentCheckin();
+  const journalCount=state.journals.length;
+  const words=q.split(/\s+/).filter(Boolean).length;
+
+  if(/hello|hi\b|hey\b|who are you|help me/.test(q)){
+    return `I'm your VYRO Guide. I can help you reflect on routines, movement, mood logs, sleep, and journaling you've recorded here.\n\nI use simple rules and your saved entries in this browser — I'm not connected to a live AI service or a healthcare professional. What's on your mind?`;
+  }
+  if(/routine|habit|productive|procrastinat|focus|schedule|plan my day/.test(q)){
+    if(!r.length) return "You have no routines saved for today yet. Open My Routine and add one small action you can realistically complete. Start with something that takes five minutes rather than rebuilding your whole day.";
+    return `Today's routine snapshot: ${done} of ${r.length} tasks completed (${Math.round(done/r.length*100)}%).\n\n${done===r.length?"You've completed every routine you set for today. Take a moment to recognise that.":`Your next step could be: ${r.find(t=>!t.done)?.title||"choose one manageable task"}.`}\n\nA useful approach is to choose one priority, reduce it to a small next step, and leave room for breaks.`;
+  }
+  if(/workout|fitness|exercise|gym|move|training/.test(q)){
+    return `Your logged movement today totals ${minutes} minutes across ${workouts.length} session(s).\n\nIf you're deciding what to do next, consider your energy, recent activity, and recovery. A gentle walk or mobility session may suit some days; on others, rest is the sensible choice. Choose activity appropriate to your abilities and any guidance from your clinician.`;
+  }
+  if(/sleep|tired|energy|exhaust/.test(q)){
+    return check&&check.sleep
+      ? `Your latest check-in records ${check.sleep} hours of sleep${check.energy?` and an energy level of ${check.energy.toLowerCase()}`:""}.\n\nOne entry doesn't establish a pattern. You could compare several days, note your bedtime routine, and see whether your energy changes. Persistent or concerning sleep problems deserve advice from a qualified professional.`
+      : "You haven't recorded sleep for today yet. Add your best estimate in Wellness, then compare it with your energy over several days. Try to notice patterns rather than judging a single night.";
+  }
+  if(/mood|sad|stress|anxious|anxiety|feel|feeling|overwhelm/.test(q)){
+    return `Your last mood entry${check&&check.mood?` is “${check.mood}”`:" has not been recorded today"}${check&&check.energy?`; your energy was “${check.energy}”`:""}.\n\nYou might try naming what you're feeling, identifying one thing within your control, and choosing a small supportive action. You can also use your journal to put thoughts into words.\n\nI'm a tracking guide, not a therapist. If you're feeling unsafe or in crisis, contact a trusted person or a qualified support service.`;
+  }
+  if(/journal|write|reflect|thought|grateful|gratitude/.test(q)){
+    return `You've saved ${journalCount} journal entr${journalCount===1?"y":"ies"} so far.\n\nTry these prompts:\n• What took more energy than expected today?\n• What is one thing I handled better than before?\n• What do I need more of this week?\n• What can I let go of for tonight?\n\nYour reflection doesn't need to be long. Even three honest sentences count.`;
+  }
+  if(/water|hydration|drink/.test(q)){
+    return check&&check.water
+      ? `Your latest check-in records ${check.water} litres of water. Needs vary with activity, climate, health, and other factors, so treat this as a log rather than a universal target.`
+      : "You haven't recorded water for today. Add an estimate in Wellness if useful. Hydration needs vary, and some medical conditions require individual fluid guidance.";
+  }
+  if(/progress|improve|doing|achievement|summary|how am i/.test(q)){
+    return `Here's your current VYRO snapshot:\n• Today's routines: ${done}/${r.length} completed\n• Movement logged today: ${minutes} minutes\n• Journal entries saved: ${journalCount}\n• Sleep logged today: ${check&&check.sleep?check.sleep+" hours":"not recorded"}\n• Today's mood: ${check&&check.mood?check.mood:"not recorded"}\n\nThese are records, not a judgement of you. Choose one area you'd like to pay attention to tomorrow.`;
+  }
+  if(words<3){
+    return "Tell me a little more about what you'd like to explore. You can ask about your logged progress, daily routines, fitness records, sleep entries, mood, or journaling.";
+  }
+  return "Let's make this practical. What's one small action that could help with what you're describing? I can also look at your saved routine, fitness, journal, and wellness records. This guide uses predefined responses and local data, so it isn't a live AI and can't diagnose or treat a health condition.";
+}
+
+function renderGuide(){
+  const msgs=state.guideMessages.length?state.guideMessages:[{
+    role:"bot",
+    text:`Welcome${state.profile.name?`, ${state.profile.name}`:""} — I'm your VYRO Guide.\n\nI can help you reflect on the habits, workouts, journal entries, and wellness information you've recorded in this app. Ask me for a progress summary or a small next step.\n\nI'm a rule-based guide, not a live AI or medical professional.`,
+    time:new Date().toISOString()
+  }];
+
+  return `<div class="page">
+    ${pageHeader("VYRO Guide","A thoughtful space to reflect on the data and habits you choose to record.",`<span class="pill accent">✦ Personal guide</span>`)}
+    <div class="grid grid-2">
+      <section class="card">
+        <div class="card-head"><div><h2>Let's think it through.</h2><p>Ask a question or choose a starting point.</p></div><span class="metric-glyph">✦</span></div>
+        <div class="chat-window" id="chatWindow">
+          ${msgs.map(m=>`<div class="chat-message ${m.role==="user"?"user":"bot"}"><span class="chat-label">${m.role==="user"?"YOU":"VYRO GUIDE"}</span>${escapeHTML(m.text)}</div>`).join("")}
+        </div>
+        <div class="prompt-row">
+          <button class="btn btn-small" data-action="guide-prompt" data-question="Summarise my progress today">Today's progress</button>
+          <button class="btn btn-small" data-action="guide-prompt" data-question="Help me build a better routine">Build a routine</button>
+          <button class="btn btn-small" data-action="guide-prompt" data-question="How can I reflect in my journal?">Journal prompts</button>
+          <button class="btn btn-small" data-action="guide-prompt" data-question="How much movement have I logged?">Fitness summary</button>
+        </div>
+        <form class="chat-form" id="guideForm">
+          <input name="message" maxlength="600" placeholder="Ask about your progress..." aria-label="Message to VYRO Guide" required>
+          <button class="btn btn-primary" type="submit" aria-label="Send message">↑</button>
+        </form>
+        <p class="small" style="margin:12px 0 0">This version uses predefined rules and your locally stored entries. No message is sent to a remote AI service.</p>
+      </section>
+      <div class="stack">
+        <section class="card">
+          <div class="eyebrow">YOUR CURRENT SNAPSHOT</div>
+          <h2 style="margin:12px 0 18px">What you've recorded</h2>
+          <div class="mini-row"><div class="mini-icon">◷</div><div class="mini-copy"><strong>Routines</strong><span>Today's completion</span></div><span class="mini-value">${routinePercent()}%</span></div>
+          <div class="mini-row"><div class="mini-icon">↗</div><div class="mini-copy"><strong>Movement</strong><span>Today's total</span></div><span class="mini-value">${todaysMinutes()} min</span></div>
+          <div class="mini-row"><div class="mini-icon">✎</div><div class="mini-copy"><strong>Journal</strong><span>Saved entries</span></div><span class="mini-value">${state.journals.length}</span></div>
+          <div class="mini-row"><div class="mini-icon">☾</div><div class="mini-copy"><strong>Sleep</strong><span>Today's entry</span></div><span class="mini-value">${currentCheckin()?.sleep?escapeHTML(currentCheckin().sleep)+" h":"—"}</span></div>
+        </section>
+        <section class="card subtle">
+          <h3>How to get more from VYRO</h3>
+          <p style="font-size:12px;line-height:1.9">Record information when it helps you. Look for patterns over time. Avoid turning your data into a score of your worth.</p>
+          <div class="data-note">For health concerns or personalised medical recommendations, consult a qualified healthcare professional.</div>
+          <button class="btn btn-wide" style="margin-top:14px" data-action="clear-guide">Clear guide conversation</button>
+        </section>
+      </div>
+    </div>
+  </div>`;
+}
+
+function sendGuideMessage(text){
+  text=String(text||"").trim();
+  if(!text) return;
+  state.guideMessages.push({id:uid(),role:"user",text, time:new Date().toISOString()});
+  const reply=guideReply(text);
+  state.guideMessages.push({id:uid(),role:"bot",text:reply,time:new Date().toISOString()});
+  state.guideMessages=state.guideMessages.slice(-60);
+  persist();
+  document.getElementById("viewRoot").innerHTML=renderGuide();
+  const chat=document.getElementById("chatWindow");
+  if(chat) chat.scrollTop=chat.scrollHeight;
+  const input=document.querySelector('#guideForm input[name="message"]');
+  if(input) input.focus();
+}
+
+/* --------------------------- Membership --------------------------- */
+
+const plans = [
+  {
+    name:"Free",price:"₹0",label:"For getting started",
+    features:["Routine and task tracking","Fitness and wellness logs","Personal journal","Basic insights and backup"],
+    note:"No payment required."
+  },
+  {
+    name:"Bronze",price:"₹49",label:"A little more structure",
+    features:["Everything in Free","Member profile styling","VYRO Guide shortcut prompts","Seven daily guide prompts in the planned paid version"],
+    note:"Price shown as a proposed subscription; checkout is not connected.",
+    featured:false
+  },
+  {
+    name:"Gold",price:"₹69",label:"More room to personalise",
+    features:["Everything in Bronze","Additional accent theme options","Expanded guide prompt allowance","Space for future curated discovery features"],
+    note:"Gold pricing is a configurable starting proposal.",
+    featured:true
+  },
+  {
+    name:"Platinum",price:"₹79",label:"The complete VYRO experience",
+    features:["Everything in Gold","Premium profile and theme styling","Unlimited guide prompts in the planned paid version","Priority space for future advanced features"],
+    note:"Premium benefits require a real billing and entitlement system before launch."
+  }
+];
+
+function renderMembership(){
+  return `<div class="page">
+    ${pageHeader("Your VYRO membership","Choose the experience that suits you. Membership can be connected to real payments later.",`<span class="pill accent">Current: ${escapeHTML(state.plan)}</span>`)}
+    <div class="data-note" style="margin-bottom:17px">Preview mode: selecting a plan here only saves your preference in this browser. No money is charged, and no paid entitlement is being verified.</div>
+    <div class="grid grid-4">
+      ${plans.map(p=>`
+        <article class="card plan-card ${p.name==="Gold"?"featured":""}">
+          ${p.name==="Gold"?`<span class="pill accent" style="align-self:flex-start">A balanced option</span>`:`<span class="pill" style="align-self:flex-start">${p.name==="Platinum"?"PREMIUM":p.name==="Bronze"?"MEMBER":"START HERE"}</span>`}
+          <h3>${p.name}</h3><p class="small" style="margin:0">${p.label}</p>
+          <div class="plan-price">${p.price}<small>/ month</small></div>
+          <ul class="plan-feature-list">${p.features.map(f=>`<li>${escapeHTML(f)}</li>`).join("")}</ul>
+          <button class="btn ${state.plan===p.name?"":"btn-primary"} btn-wide" data-action="choose-plan" data-plan="${p.name}">${state.plan===p.name?"Selected in preview":p.name==="Free"?"Use Free plan":"Preview "+p.name}</button>
+          <div class="plan-footnote">${p.note}</div>
+        </article>`).join("")}
+    </div>
+    <section class="card" style="margin-top:17px">
+      <div class="card-head"><div><h2>What happens next?</h2><p>Real subscriptions require a secure purchase flow.</p></div><span class="metric-glyph">◇</span></div>
+      <div class="grid grid-3">
+        <div><div class="eyebrow">01</div><h3 style="margin-top:8px">Secure checkout</h3><p class="small" style="line-height:1.8">Connect an approved payment provider when the commercial version is ready.</p></div>
+        <div><div class="eyebrow">02</div><h3 style="margin-top:8px">Verified access</h3><p class="small" style="line-height:1.8">Verify subscription status through a trusted backend rather than local browser data.</p></div>
+        <div><div class="eyebrow">03</div><h3 style="margin-top:8px">Member benefits</h3><p class="small" style="line-height:1.8">Enforce paid limits and benefits only after the subscription has been verified.</p></div>
+      </div>
+    </section>
+  </div>`;
+}
+
+/* --------------------------- Settings --------------------------- */
+
+function renderSettings(){
+  return `<div class="page">
+    ${pageHeader("Your settings","Manage your profile, choose your atmosphere, and protect your data.")}
+    <div class="grid grid-2">
+      <section class="card">
+        <div class="card-head"><div><h2>Your profile</h2><p>Make this space feel like yours.</p></div></div>
+        <div style="display:flex;align-items:center;gap:13px;margin-bottom:20px">
+          ${avatarMarkup("upload-circle")}
+          <div><strong style="display:block">${escapeHTML(state.profile.name||"VYRO member")}</strong><span class="small muted">Age ${state.profile.age?escapeHTML(state.profile.age):"not provided"}</span>
+          <div style="margin-top:8px"><button class="btn btn-small" data-action="change-photo">Change photo</button></div></div>
+        </div>
+        <form id="settingsProfileForm">
+          <div class="field"><label for="settingsName">Name</label><input id="settingsName" name="name" maxlength="50" required value="${escapeHTML(state.profile.name)}"></div>
+          <div class="field"><label for="settingsAge">Age</label><input id="settingsAge" name="age" type="number" min="13" max="110" required value="${escapeHTML(state.profile.age)}"></div>
+          <button class="btn btn-primary" type="submit">Save profile</button>
+        </form>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><div><h2>Choose your atmosphere</h2><p>Change the accent throughout VYRO.</p></div></div>
+        <div class="stack" style="gap:9px">
+          ${[
+            {id:"violet",title:"Electric violet",desc:"Midnight and lavender"},
+            {id:"cyan",title:"Arctic cyan",desc:"Cool, clear and modern"},
+            {id:"rose",title:"Cosmic rose",desc:"Soft pink and violet"}
+          ].map(t=>`<button class="theme-option ${state.settings.theme===t.id?"active":""}" data-action="theme" data-theme="${t.id}"><span class="theme-swatch ${t.id}"></span><span style="flex:1;text-align:left"><strong style="display:block;font-size:12px">${t.title}</strong><span class="small muted">${t.desc}</span></span><span>${state.settings.theme===t.id?"✓":""}</span></button>`).join("")}
+        </div>
+        <hr>
+        <div class="card-head"><div><h3>Membership</h3><p>Current preview plan: ${escapeHTML(state.plan)}</p></div><button class="btn btn-small" data-view="membership">View plans →</button></div>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><div><h2>Your data</h2><p>Keep a backup outside this browser.</p></div><span class="metric-glyph">↗</span></div>
+        <div class="data-note">Your journal, routines, check-ins and workout logs live in this browser's local storage. Clearing browser data may remove them. Exports contain your personal entries, so store backup files securely.</div>
+        <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:17px">
+          <button class="btn btn-primary" data-action="export">↓ Export backup</button>
+          <button class="btn" data-action="import">↑ Restore backup</button>
+        </div>
+        <p class="small" style="margin:12px 0 0">Restore replaces the current VYRO data with the selected backup.</p>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><div><h2>Privacy & information</h2><p>Understand what this version does.</p></div><span class="metric-glyph">◇</span></div>
+        <div class="mini-row"><div class="mini-icon">⌁</div><div class="mini-copy"><strong>Privacy information</strong><span>Browser storage and data handling</span></div><button class="btn btn-small" data-action="open-privacy">Read</button></div>
+        <div class="mini-row"><div class="mini-icon">✦</div><div class="mini-copy"><strong>About VYRO</strong><span>Features and current limitations</span></div><button class="btn btn-small" data-action="open-about">Read</button></div>
+        <div class="mini-row"><div class="mini-icon">↺</div><div class="mini-copy"><strong>Reset application</strong><span>Remove local VYRO entries</span></div><button class="btn btn-small btn-danger" data-action="reset">Reset</button></div>
+      </section>
+    </div>
+  </div>`;
+}
+
+function renderView(view){
+  const renderers={
+    home:renderHome,
+    routine:renderRoutine,
+    fitness:renderFitness,
+    journal:renderJournal,
+    wellness:renderWellness,
+    insights:renderInsights,
+    guide:renderGuide,
+    membership:renderMembership,
+    settings:renderSettings
+  };
+  return (renderers[view]||renderHome)();
+}
+
+/* --------------------------- Modals --------------------------- */
+
+const privacyHTML=`
+<p><strong style="color:var(--text)">VYRO — privacy information</strong></p>
+<p>This is a browser-based prototype. Profile details, routine tasks, journal entries, workout logs, wellness check-ins, theme preferences and guide conversation history are stored in the local storage of the browser on your device.</p>
+<h3>What is stored?</h3>
+<p>Information you enter in the app, including optional profile photos and wellness logs. When you export a backup, the downloaded JSON file contains your saved app data.</p>
+<h3>What is not connected?</h3>
+<p>This prototype does not have a user account server, cloud synchronisation, a live AI service, a payment processor, an advertising network, or an integration that reads information from health devices. GitHub Pages hosting alone does not create an account system.</p>
+<h3>Keeping your information safe</h3>
+<p>Anyone with access to this browser profile may be able to access the app's locally stored data. Do not use a shared device for sensitive entries. Protect any backup files you download. Deleting browser storage or clearing site data can remove your entries; export a backup first.</p>
+<h3>Health-related information</h3>
+<p>VYRO is not a medical device and does not diagnose, treat or prevent disease. Track only information you are comfortable storing in this browser. Speak to a qualified healthcare professional for medical guidance.</p>
+<h3>Before public launch</h3>
+<p>A production release should provide a final privacy policy that accurately identifies the responsible operator, data collection, third-party services, retention, user rights, deletion process, and contact details. Update this notice if the app's actual behaviour changes.</p>`;
+
+const aboutHTML=`
+<p><strong style="color:var(--text)">VYRO — Your Personal Operating System</strong></p>
+<p>VYRO brings personal routines, movement, journaling, wellness tracking, and progress reflections into a single mobile-friendly experience.</p>
+<h3>Available in this version</h3>
+<p>Local onboarding and profile editing; daily routines; workout logs; journal entries; wellness check-ins; basic weekly charts; predefined, data-aware guide responses; theme selection; membership previews; JSON export and restore.</p>
+<h3>Not yet integrated</h3>
+<p>Real recurring payments, verified subscriptions, server accounts, synchronisation across devices, cloud backup, live generative AI, automatic activity tracking, health platform connections, and live advertising.</p>
+<h3>What your data means</h3>
+<p>Charts reflect entries saved in the app. They are not independently measured health data, medical assessments, or guarantees of results.</p>`;
+
+function showModal(title,html){
+  document.getElementById("modalTitle").textContent=title;
+  document.getElementById("modalContent").innerHTML=html;
+  document.getElementById("modalOverlay").classList.add("visible");
+}
+function closeModal(){
+  document.getElementById("modalOverlay").classList.remove("visible");
+}
+function exportBackup(){
+  const data={
+    app:"VYRO",
+    formatVersion:1,
+    exportedAt:new Date().toISOString(),
+    data:state
+  };
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const link=document.createElement("a");
+  link.href=url;
+  link.download=`vyro-backup-${todayKey()}.json`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  showToast("Your backup has been prepared.");
+}
+function importBackup(file){
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const imported=JSON.parse(String(reader.result||""));
+      const candidate=imported.data || imported;
+      if(!candidate || typeof candidate!=="object" || !candidate.profile || !Array.isArray(candidate.routines)){
+        throw new Error("This does not look like a VYRO backup.");
+      }
+      if(!confirm("Restore this backup? Current local VYRO data will be replaced.")) return;
+      state=normalizeState(candidate);
+      ensureTodayRoutines();
+      persist();
+      setTheme();
+      if(state.profile.completed) startApp();
+      else startGate();
+      showToast("VYRO backup restored.");
+    }catch(error){
+      showToast(error.message || "Could not read this backup file.");
+    }finally{
+      document.getElementById("backupInput").value="";
+    }
+  };
+  reader.onerror=()=>showToast("The backup file could not be read.");
+  reader.readAsText(file);
+}
+
+function resetApp(){
+  const confirmed=confirm("Reset VYRO on this browser? This removes your profile, routines, journal, workouts, check-ins and saved settings. Export a backup first if you want to keep your data.");
+  if(!confirmed) return;
+  try{localStorage.removeItem(STORAGE_KEY)}catch(e){}
+  state=defaultState();
+  activeView="home";
+  gateStep=0;
+  onboardDraft={name:"",age:"",photo:""};
+  startGate();
+  showToast("VYRO has been reset on this browser.");
+}
+
+function readImage(file,callback){
+  if(!file) return;
+  if(!file.type.startsWith("image/")){
+    showToast("Choose an image file.");
+    return;
+  }
+  if(file.size>2*1024*1024){
+    showToast("Please choose an image smaller than 2 MB.");
+    return;
+  }
+  const reader=new FileReader();
+  reader.onload=()=>callback(String(reader.result||""));
+  reader.onerror=()=>showToast("Could not read that image.");
+  reader.readAsDataURL(file);
+}
+
+/* --------------------------- Event handling --------------------------- */
+
+document.addEventListener("click",event=>{
+  const actionButton=event.target.closest("[data-action]");
+  if(actionButton){
+    const action=actionButton.dataset.action;
+    switch(action){
+      case "gate-next":
+        gateStep=1;renderGate();break;
+      case "gate-back":
+        gateStep=Math.max(0,gateStep-1);renderGate();break;
+      case "open-privacy":
+        showModal("Privacy information",privacyHTML);break;
+      case "open-about":
+        showModal("About VYRO",aboutHTML);break;
+      case "close-modal":
+        closeModal();break;
+      case "open-more":
+        document.getElementById("moreOverlay").classList.add("visible");break;
+      case "close-more":
+        document.getElementById("moreOverlay").classList.remove("visible");break;
+      case "toggle-routine":{
+        const task=state.routines.find(x=>x.id===actionButton.dataset.id);
+        if(task){task.done=!task.done;persist();setView(activeView);}
+        break;
+      }
+      case "delete-routine":{
+        if(confirm("Remove this routine from your saved list?")){
+          state.routines=state.routines.filter(x=>x.id!==actionButton.dataset.id);
+          persist();setView(activeView);showToast("Routine removed.");
+        }
+        break;
+      }
+      case "delete-workout":{
+        if(confirm("Remove this workout log?")){
+          state.workouts=state.workouts.filter(x=>x.id!==actionButton.dataset.id);
+          persist();setView(activeView);showToast("Workout removed.");
+        }
+        break;
+      }
+      case "delete-journal":{
+        if(confirm("Delete this journal entry? This cannot be undone unless you have a backup.")){
+          state.journals=state.journals.filter(x=>x.id!==actionButton.dataset.id);
+          persist();setView(activeView);showToast("Journal entry deleted.");
+        }
+        break;
+      }
+      case "guide-prompt":
+        sendGuideMessage(actionButton.dataset.question||"");break;
+      case "clear-guide":
+        if(confirm("Clear the saved guide conversation?")){
+          state.guideMessages=[];persist();setView("guide");showToast("Guide conversation cleared.");
+        }
+        break;
+      case "choose-plan":{
+        const plan=actionButton.dataset.plan;
+        if(!["Free","Bronze","Gold","Platinum"].includes(plan)) break;
+        state.plan=plan;persist();setView("membership");
+        showToast(plan==="Free"?"Free plan selected in preview.":plan+" preview selected — no payment taken.");
+        break;
+      }
+      case "theme":{
+        const theme=actionButton.dataset.theme;
+        if(["violet","cyan","rose"].includes(theme)){
+          state.settings.theme=theme;setTheme();persist();setView("settings");showToast("Theme updated.");
+        }
+        break;
+      }
+      case "export":
+        exportBackup();break;
+      case "import":
+        document.getElementById("backupInput").click();break;
+      case "change-photo":
+        document.getElementById("settingsPhotoInput").click();break;
+      case "reset":
+        resetApp();break;
+    }
+    return;
+  }
+
+  const navButton=event.target.closest("[data-view]");
+  if(navButton){
+    setView(navButton.dataset.view);
+    return;
+  }
+
+  if(event.target.id==="modalOverlay") closeModal();
+  if(event.target.id==="moreOverlay") document.getElementById("moreOverlay").classList.remove("visible");
+});
+
+document.addEventListener("submit",event=>{
+  const form=event.target;
+  if(!(form instanceof HTMLFormElement)) return;
+
+  if(form.id==="gateProfileForm"){
+    event.preventDefault();
+    const fd=new FormData(form);
+    const name=String(fd.get("name")||"").trim();
+    const age=Number(fd.get("age"));
+    if(!name || name.length>50 || !Number.isFinite(age) || age<13 || age>110){
+      showToast("Enter a valid name and age to continue.");
+      return;
+    }
+    onboardDraft.name=name;
+    onboardDraft.age=String(age);
+    gateStep=2;
+    renderGate();
+    return;
+  }
+
+  if(form.id==="gateConsentForm"){
+    event.preventDefault();
+    finishOnboarding();
+    return;
+  }
+
+  if(form.id==="routineForm"){
+    event.preventDefault();
+    const fd=new FormData(form);
+    const title=String(fd.get("title")||"").trim();
+    if(!title) return;
+    ensureTodayRoutines();
+    state.routines.push({
+      id:uid(),title,
+      time:String(fd.get("time")||"Anytime"),
+      category:String(fd.get("category")||"Personal"),
+      day:todayKey(),done:false,createdAt:new Date().toISOString()
+    });
+    persist();setView("routine");showToast("Routine added to your day.");
+    return;
+  }
+
+  if(form.id==="workoutForm"){
+    event.preventDefault();
+    const fd=new FormData(form);
+    const title=String(fd.get("title")||"").trim();
+    const minutes=Number(fd.get("minutes"));
+    if(!title || !Number.isFinite(minutes) || minutes<1 || minutes>1440){
+      showToast("Enter a session name and duration between 1 and 1,440 minutes.");
+      return;
+    }
+    state.workouts.push({
+      id:uid(),title,
+      type:String(fd.get("type")||"Other"),
+      minutes,
+      effort:String(fd.get("effort")||"Moderate"),
+      note:String(fd.get("note")||"").trim(),
+      date:todayKey(),createdAt:new Date().toISOString()
+    });
+    persist();setView("fitness");showToast("Workout saved. Nice work.");
+    return;
+  }
+
+  if(form.id==="journalForm"){
+    event.preventDefault();
+    const fd=new FormData(form);
+    const title=String(fd.get("title")||"").trim();
+    const body=String(fd.get("body")||"").trim();
+    if(!title || !body){
+      showToast("Add a title and your reflection before saving.");
+      return;
+    }
+    state.journals.push({
+      id:uid(),title,body,
+      mood:String(fd.get("mood")||"Okay"),
+      date:todayKey(),createdAt:new Date().toISOString()
+    });
+    persist();setView("journal");showToast("Your reflection has been saved.");
+    return;
+  }
+
+  if(form.id==="wellnessForm"){
+    event.preventDefault();
+    const fd=new FormData(form);
+    const values={
+      sleep:fd.get("sleep")===""?"":Number(fd.get("sleep")),
+      water:fd.get("water")===""?"":Number(fd.get("water")),
+      mood:String(fd.get("mood")||""),
+      energy:String(fd.get("energy")||""),
+      weight:fd.get("weight")===""?"":Number(fd.get("weight"))
+    };
+    if(values.sleep!==""&&(!Number.isFinite(values.sleep)||values.sleep<0||values.sleep>24)){
+      showToast("Sleep hours must be between 0 and 24.");return;
+    }
+    if(values.water!==""&&(!Number.isFinite(values.water)||values.water<0||values.water>30)){
+      showToast("Water must be between 0 and 30 litres.");return;
+    }
+    if(values.weight!==""&&(!Number.isFinite(values.weight)||values.weight<1||values.weight>500)){
+      showToast("Check the weight value and try again.");return;
+    }
+    state.checkins[todayKey()]={...values,date:todayKey(),updatedAt:new Date().toISOString()};
+    persist();setView("wellness");showToast("Today's check-in is saved.");
+    return;
+  }
+
+  if(form.id==="guideForm"){
+    event.preventDefault();
+    const fd=new FormData(form);
+    sendGuideMessage(String(fd.get("message")||""));
+    return;
+  }
+
+  if(form.id==="settingsProfileForm"){
+    event.preventDefault();
+    const fd=new FormData(form);
+    const name=String(fd.get("name")||"").trim();
+    const age=Number(fd.get("age"));
+    if(!name || name.length>50 || !Number.isFinite(age) || age<13 || age>110){
+      showToast("Enter a valid name and age.");
+      return;
+    }
+    state.profile.name=name;
+    state.profile.age=String(age);
+    persist();renderChrome();setView("settings");showToast("Profile saved.");
+  }
+});
+
+document.addEventListener("change",event=>{
+  const target=event.target;
+  if(target.id==="onboardPhoto"){
+    readImage(target.files?.[0],data=>{
+      onboardDraft.photo=data;
+      const preview=document.getElementById("onboardPreview");
+      if(preview) preview.innerHTML=`<img alt="Selected profile photo" src="${escapeHTML(data)}">`;
+    });
+  }
+  if(target.id==="settingsPhotoInput"){
+    readImage(target.files?.[0],data=>{
+      state.profile.photo=data;
+      if(persist()){
+        renderChrome();setView("settings");showToast("Profile photo updated.");
+      }
+      target.value="";
+    });
+  }
+  if(target.id==="backupInput"){
+    importBackup(target.files?.[0]);
+  }
+});
+
+/* --------------------------- Start --------------------------- */
+
+(function init(){
+  setTheme();
+  if(state.profile.completed){
+    ensureTodayRoutines();
+    startApp();
+  }else{
+    startGate();
+  }
+})();
+</script>
+</body>
+</html>
